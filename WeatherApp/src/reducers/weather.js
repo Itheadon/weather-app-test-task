@@ -12,6 +12,11 @@ export default function weatherReducer(state, action) {
         temperature: action.payload.temperature,
         humidity: action.payload.humidity
       };
+    case 'STOP_UPDATE':
+      return {
+        ...state,
+        fetching: false
+      };
     default:
       return state;
   }

@@ -3,7 +3,7 @@
  * suggests this package is used instead
  */
 import AsyncStorage from '@react-native-community/async-storage';
-import { fetchWeather, updateWeather } from '../actions/weather';
+import { fetchWeather, updateWeather, stopUpdate } from '../actions/weather';
 
 /**
  * Main business logic for fetching and saving/recalling weather info
@@ -94,9 +94,13 @@ class WeatherService {
           AsyncStorage.setItem('@weather', JSON.stringify(payload));
         } catch (err) {
           console.warn(err);
+          dispatch(stopUpdate())
         }
       },
-      err => console.warn(err)
+      err => {
+        console.warn(err)
+        dispatch(stopUpdate())
+      }
     );
   };
 }
