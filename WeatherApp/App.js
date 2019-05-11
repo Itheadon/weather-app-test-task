@@ -1,7 +1,7 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
+ * The Weather App Test Task
+ * Further comments are in the codes in ./src
+ * 
  * @format
  * @flow
  */

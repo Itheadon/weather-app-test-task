@@ -8,7 +8,7 @@ export default function weatherReducer(state, action) {
     case 'UPDATE_WEATHER':
       return {
         fetching: false,
-        lastFetched: action.payload.date,
+        lastFetched: action.payload.lastFetched || new Date(),
         temperature: action.payload.temperature,
         humidity: action.payload.humidity
       };

@@ -2,7 +2,7 @@ export const fetchWeather = () => ({
   type: 'FETCH_WEATHER'
 });
 
-export const updateWeather = (temperature, humidity, date = new Date()) => ({
+export const updateWeather = payload => ({
   type: 'UPDATE_WEATHER',
-  payload: { temperature, humidity }
+  payload
 });
