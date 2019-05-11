@@ -60,7 +60,7 @@ class WeatherService {
           /**
            * uri and options are for fetch()
            * normally I would enclose all parameters in encodeUriComponent() but in this case
-           * there should not be any illegal symbols or anything like that
+           * there should not be any illegal symbols or anything like that.
            * units=metric is for degrees Celsius, as specified in the documentation:
            * https://openweathermap.org/current#data
            */

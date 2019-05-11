@@ -10,7 +10,7 @@ class Weather extends Component {
   }
 
   componentDidMount = () => {
-    this.props.dispatch(WeatherService.fetchWeather());
+    this.refresh()
   };
 
   refresh = () => {

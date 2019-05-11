@@ -54,6 +54,7 @@ class Test extends Component {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('Location permission granted');
+        store.dispatch(WeatherService.fetchWeather())
       } else {
         console.log('Location permission denied');
       }
