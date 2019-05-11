@@ -27,12 +27,15 @@ class WeatherService {
    * If it exists, checks if new information has been received from the API by the time the call
    * is finished. If not, updated the redux state with previously saved data.
    */
-  readWeatherFromStorage = async (dispatch, getState) => {
+  readWeatherFromStorage = () => async (dispatch, getState) => {
     try {
-      const payload = await AsyncStorage.getItem('@weather');
-      const state = getState();
-      if (payload && !state.temperature && !state.humidity) {
-        dispatch(updateWeather(payload));
+      const payloadString = await AsyncStorage.getItem('@weather');
+      if (payloadString) {
+        const payload = JSON.parse(payloadString);
+        const state = getState();
+        if (payload && !state.temperature && !state.humidity) {
+          dispatch(updateWeather(payload));
+        }
       }
     } catch (err) {
       console.warn(err);
@@ -47,40 +50,41 @@ class WeatherService {
    * weather info. Updates the redux state accordingly. Saves the updated info
    * into AsyncStorage.
    */
-  fetchWeather = async dispatch => {
+  fetchWeather = () => async dispatch => {
     dispatch(fetchWeather());
-    try {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        try {
           // uri and options are for fetch()
           const uri = `${this.api}?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`;
           const options = {
             method: 'GET'
           };
-
+          console.log('uri', uri)
           // Fetching the weather data from the api
-          const response = await fetch(uri, options)
+          const response = await fetch(uri, options);
           // If there's an error, throw it to be caught by the handler below
-          if(!response.ok) {
-            throw(response.statusText)
+          if (!response.ok) {
+            throw response.statusText;
           }
 
           // parsing the data json
-          const weatherData = await response.json()
+          const weatherData = await response.json();
           const payload = {
             temperature: weatherData.main.temp,
             humidity: weatherData.main.humidity,
             lastFetched: new Date()
-          }
+          };
 
           // dispatching the redux action to update the state
-          dispatch(updateWeather(payload))
-        },
-        err => console.warn(err)
-      );
-    } catch (err) {
-      console.warn(err);
-    }
+          dispatch(updateWeather(payload));
+          AsyncStorage.setItem('@weather', JSON.stringify(payload));
+        } catch (err) {
+          console.warn(err);
+        }
+      },
+      err => console.warn(err)
+    );
   };
 }
 

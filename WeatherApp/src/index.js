@@ -20,7 +20,7 @@ const initialState = {
 
 const store = createStore(weatherReducer, initialState, applyMiddleware(thunk));
 // Reading the previously saved weather data from AsyncStorage to prepopulate the state during the initial load
-WeatherService.readWeatherFromStorage(store.dispatch);
+store.dispatch(WeatherService.readWeatherFromStorage())
 
 class Test extends Component {
   constructor(props) {
