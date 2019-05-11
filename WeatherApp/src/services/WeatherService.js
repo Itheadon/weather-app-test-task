@@ -17,7 +17,8 @@ import { fetchWeather, updateWeather } from '../actions/weather';
 class WeatherService {
   constructor() {
     // OpenWeatherMap API
-    this.api = 'api.openweathermap.org/data/2.5/weather';
+    this.api = 'http://api.openweathermap.org/data/2.5/weather';
+    this.apiKey = '4d2b20c46e6fcad8bd9fae6d605684ac';
   }
 
   /**
@@ -56,15 +57,16 @@ class WeatherService {
       async pos => {
         try {
           // uri and options are for fetch()
-          const uri = `${this.api}?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`;
+          const uri = `${this.api}?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&APPID=${this.apiKey}`;
           const options = {
             method: 'GET'
           };
-          console.log('uri', uri)
+
           // Fetching the weather data from the api
           const response = await fetch(uri, options);
           // If there's an error, throw it to be caught by the handler below
           if (!response.ok) {
+            console.log('response', response)
             throw response.statusText;
           }
 
