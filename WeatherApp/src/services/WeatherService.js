@@ -18,6 +18,7 @@ class WeatherService {
   constructor() {
     // OpenWeatherMap API
     this.api = 'http://api.openweathermap.org/data/2.5/weather';
+    // My personal API Key from OpenWeatherMap. I will deactivate it later
     this.apiKey = '4d2b20c46e6fcad8bd9fae6d605684ac';
   }
 
@@ -56,17 +57,27 @@ class WeatherService {
     navigator.geolocation.getCurrentPosition(
       async pos => {
         try {
-          // uri and options are for fetch()
-          const uri = `${this.api}?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&APPID=${this.apiKey}`;
+          /**
+           * uri and options are for fetch()
+           * normally I would enclose all parameters in encodeUriComponent() but in this case
+           * there should not be any illegal symbols or anything like that
+           * units=metric is for degrees Celsius, as specified in the documentation:
+           * https://openweathermap.org/current#data
+           */
+          const uri =
+            this.api +
+            `?lat=${pos.coords.latitude}` +
+            `&lon=${pos.coords.longitude}` +
+            '&units=metric' +
+            `&APPID=${this.apiKey}`;
           const options = {
             method: 'GET'
           };
-
+          
           // Fetching the weather data from the api
           const response = await fetch(uri, options);
           // If there's an error, throw it to be caught by the handler below
           if (!response.ok) {
-            console.log('response', response)
             throw response.statusText;
           }
 
@@ -77,9 +88,9 @@ class WeatherService {
             humidity: weatherData.main.humidity,
             lastFetched: new Date()
           };
-
           // dispatching the redux action to update the state
           dispatch(updateWeather(payload));
+          // Saving the result to AsyncStorage
           AsyncStorage.setItem('@weather', JSON.stringify(payload));
         } catch (err) {
           console.warn(err);

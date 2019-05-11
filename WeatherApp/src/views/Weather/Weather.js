@@ -9,9 +9,13 @@ class Weather extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    this.props.dispatch(WeatherService.fetchWeather())
-  }
+  componentDidMount = () => {
+    this.props.dispatch(WeatherService.fetchWeather());
+  };
+
+  refresh = () => {
+    this.props.dispatch(WeatherService.fetchWeather());
+  };
 
   render() {
     const { fetching, lastFetched, temperature, humidity } = this.props;
@@ -29,7 +33,14 @@ class Weather extends Component {
           <Text style={styles.header}>Weather at your location</Text>
           <Text style={styles.info}>Temperature: {temperature}ºC</Text>
           <Text style={styles.info}>Humidity: {humidity}%</Text>
-          <Text style={styles.info}>Last fetched: {lastFetched}</Text>
+          {/**
+            The following typeof check is a safeguard.
+            The date received from AsyncStorage will be a String rather than a Date.
+            The task did not specify the format in which to show the date, hence simple toString()
+           */}
+          <Text style={styles.info}>
+            Last fetched: {typeof lastFetched === 'object' ? lastFetched.toString() : lastFetched}
+          </Text>
         </ScrollView>
       </SafeAreaView>
     );
